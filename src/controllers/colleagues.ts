@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { DatabaseConfig } from '../config/database';
-import { Colleague, CreateColleagueRequest, UpdateColleagueRequest } from '../types';
+import { Colleague } from '../types';
 import { staticDir } from '../config/upload';
 import fs from 'fs';
 import path from 'path';
+
+// SQLite dialect configuration for IDE support
 
 const PORT = process.env.PORT || 3001;
 
@@ -14,7 +16,7 @@ export class ColleaguesController {
 
   // Get all colleagues
   public static async getAllColleagues(req: Request, res: Response): Promise<void> {
-    const db = this.getDatabase();
+    const db = ColleaguesController.getDatabase();
     
     db.all("SELECT * FROM colleagues ORDER BY name", (err, rows: Colleague[]) => {
       if (err) {
@@ -35,7 +37,7 @@ export class ColleaguesController {
   // Get single colleague by ID
   public static async getColleagueById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    const db = this.getDatabase();
+    const db = ColleaguesController.getDatabase();
     
     db.get("SELECT * FROM colleagues WHERE id = ?", [id], (err, row: Colleague | undefined) => {
       if (err) {
@@ -68,7 +70,7 @@ export class ColleaguesController {
     }
     
     const photo_filename = (req.file as Express.Multer.File)?.filename || null;
-    const db = this.getDatabase();
+    const db = ColleaguesController.getDatabase();
     
     db.run(`
       INSERT INTO colleagues (name, position, department, email, phone, photo_filename, hire_date, salary, notes)
@@ -105,7 +107,7 @@ export class ColleaguesController {
   public static async updateColleague(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const { name, position, department, email, phone, hire_date, salary, notes } = req.body;
-    const db = this.getDatabase();
+    const db = ColleaguesController.getDatabase();
     
     // First check if colleague exists
     db.get("SELECT * FROM colleagues WHERE id = ?", [id], (err, existingColleague: Colleague | undefined) => {
@@ -166,7 +168,7 @@ export class ColleaguesController {
   // Delete colleague
   public static async deleteColleague(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    const db = this.getDatabase();
+    const db = ColleaguesController.getDatabase();
     
     // First get the colleague to delete their photo file
     db.get("SELECT photo_filename FROM colleagues WHERE id = ?", [id], (err, colleague: { photo_filename?: string } | undefined) => {

@@ -1,6 +1,8 @@
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite3';
 
+// SQLite dialect configuration for IDE support
+
 export class DatabaseConfig {
   private static instance: DatabaseConfig;
   private db: Database | null = null;
