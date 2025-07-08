@@ -1,8 +1,8 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import path from 'path';
 import { staticDir } from './config/upload';
 import colleaguesRoutes from './routes/colleagues';
+import authRoutes from './routes/auth';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3001;
@@ -17,6 +17,7 @@ app.use('/static', express.static(staticDir));
 
 // Routes
 app.use('/api/colleagues', colleaguesRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
