@@ -10,6 +10,7 @@ export interface Colleague {
   hire_date?: string;
   salary?: number;
   notes?: string;
+  is_at_work: boolean;
   created_at: string;
   updated_at: string;
 }

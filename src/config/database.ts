@@ -49,6 +49,7 @@ export class DatabaseConfig {
         hire_date TEXT,
         salary REAL,
         notes TEXT,
+        is_at_work BOOLEAN DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`);

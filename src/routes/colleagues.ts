@@ -20,4 +20,7 @@ router.put('/:id', basicAuth, upload.single('photo'), ColleaguesController.updat
 // Delete colleague (requires authentication)
 router.delete('/:id', basicAuth, ColleaguesController.deleteColleague);
 
+// Update colleague status (no authentication required)
+router.patch('/:id/status', ColleaguesController.updateColleagueStatus);
+
 export default router; 

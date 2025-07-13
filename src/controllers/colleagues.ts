@@ -201,4 +201,60 @@ export class ColleaguesController {
       });
     });
   }
+
+  // Update colleague status (is_at_work)
+  public static async updateColleagueStatus(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    const { is_at_work } = req.body;
+    const db = ColleaguesController.getDatabase();
+    
+    if (typeof is_at_work !== 'boolean') {
+      res.status(400).json({ error: 'is_at_work must be a boolean value' });
+      return;
+    }
+    
+    // First check if colleague exists
+    db.get("SELECT * FROM colleagues WHERE id = ?", [id], (err, existingColleague: Colleague | undefined) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      
+      if (!existingColleague) {
+        res.status(404).json({ error: 'Colleague not found' });
+        return;
+      }
+      
+      db.run(`
+        UPDATE colleagues 
+        SET is_at_work = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `, [is_at_work, id], function(err) {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        
+        // Get the updated colleague
+        db.get("SELECT * FROM colleagues WHERE id = ?", [id], (err, row: Colleague | undefined) => {
+          if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+          }
+          
+          if (!row) {
+            res.status(500).json({ error: 'Failed to retrieve updated colleague' });
+            return;
+          }
+          
+          const colleague = {
+            ...row,
+            photo_url: row.photo_filename ? `http://localhost:${PORT}/static/${row.photo_filename}` : null
+          };
+          
+          res.json(colleague);
+        });
+      });
+    });
+  }
 } 
