@@ -23,4 +23,7 @@ router.delete('/:id', basicAuth, ColleaguesController.deleteColleague);
 // Update colleague status (no authentication required)
 router.patch('/:id/status', ColleaguesController.updateColleagueStatus);
 
+// SSE endpoint for real-time status updates
+router.get('/status/stream', ColleaguesController.getStatusStream);
+
 export default router; 

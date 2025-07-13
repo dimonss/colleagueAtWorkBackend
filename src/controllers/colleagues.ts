@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { DatabaseConfig } from '../config/database';
 import { Colleague } from '../types';
 import { staticDir } from '../config/upload';
+import StatusEventEmitter from '../utils/eventEmitter';
 import fs from 'fs';
 import path from 'path';
 
@@ -235,6 +236,9 @@ export class ColleaguesController {
           return;
         }
         
+        // Emit status change event
+        StatusEventEmitter.getInstance().emitStatusChange(parseInt(id), is_at_work);
+        
         // Get the updated colleague
         db.get("SELECT * FROM colleagues WHERE id = ?", [id], (err, row: Colleague | undefined) => {
           if (err) {
@@ -255,6 +259,50 @@ export class ColleaguesController {
           res.json(colleague);
         });
       });
+    });
+  }
+
+  // SSE stream for real-time status updates
+  public static async getStatusStream(req: Request, res: Response): Promise<void> {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Cache-Control'
+    });
+
+    const eventEmitter = StatusEventEmitter.getInstance();
+
+    // Send initial data
+    const db = ColleaguesController.getDatabase();
+    db.all("SELECT id, name, is_at_work FROM colleagues ORDER BY name", (err, rows) => {
+      if (!err && rows) {
+        res.write(`data: ${JSON.stringify({ type: 'initial', colleagues: rows })}\n\n`);
+      }
+    });
+
+    // Listen for status change events
+    const statusChangeHandler = (data: { colleagueId: number, isAtWork: boolean }) => {
+      res.write(`data: ${JSON.stringify({ 
+        type: 'statusChange', 
+        colleagueId: data.colleagueId, 
+        isAtWork: data.isAtWork 
+      })}\n\n`);
+    };
+
+    // Add event listener
+    eventEmitter.on('statusChange', statusChangeHandler);
+
+    // Keep connection alive with heartbeat
+    const heartbeat = setInterval(() => {
+      res.write(`data: ${JSON.stringify({ type: 'heartbeat' })}\n\n`);
+    }, 30000); // Send heartbeat every 30 seconds
+
+    // Clean up on client disconnect
+    req.on('close', () => {
+      eventEmitter.off('statusChange', statusChangeHandler);
+      clearInterval(heartbeat);
     });
   }
 } 
