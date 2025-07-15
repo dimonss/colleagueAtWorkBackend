@@ -18,7 +18,7 @@ export class DatabaseConfig {
 
   public getDatabase(): Database {
     if (!this.db) {
-      const dbPath = process.env.NODE_ENV === 'test' ? './test-colleagues.db' : './colleagues.db';
+      const dbPath = process.env.NODE_ENV === 'prod' ? './colleagues.db' : './test-colleagues.db';
       this.db = new sqlite3.Database(dbPath, (err) => {
         if (err) {
           console.error('Error opening database:', err.message);

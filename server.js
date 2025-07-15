@@ -51,7 +51,7 @@ const upload = multer({
 });
 
 // Database setup
-const dbPath = process.env.NODE_ENV === 'test' ? './test-colleagues.db' : './colleagues.db';
+const dbPath = process.env.NODE_ENV === 'prod' ? './colleagues.db' : './test-colleagues.db';
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err.message);

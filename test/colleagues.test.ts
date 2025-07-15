@@ -8,7 +8,7 @@ const basicAuth = 'Basic ' + Buffer.from('admin:admin123').toString('base64');
 let createdId: number;
 
 // Устанавливаем тестовое окружение
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'dev';
 
 describe('Colleagues API', () => {
   // Ждем инициализации БД
