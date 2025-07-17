@@ -57,9 +57,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.error('Error opening database:', err.message);
   } else {
     console.log(`Connected to SQLite database: ${dbPath}`);
-    if (process.env.NODE_ENV !== 'test') {
-      initDatabase();
-    }
+    initDatabase();
   }
 });
 

@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(staticDir));
 
 // API routes with /colleagues prefix for production
-const apiPrefix = process.env.NODE_ENV === 'prod' ? '/colleagues/api' : '/api';
+const apiPrefix = process.env.NODE_ENV === 'prod' ? '' : '/api';
 app.use(`${apiPrefix}/colleagues`, colleaguesRoutes);
 app.use(`${apiPrefix}/auth`, authRoutes);
 

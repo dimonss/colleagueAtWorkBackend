@@ -59,7 +59,7 @@ Create a `.env` file in the backend directory:
 
 ```env
 # Node environment
-NODE_ENV=production
+NODE_ENV=prod
 
 # Server port
 PORT=3001
@@ -402,7 +402,7 @@ The backend supports different CORS configurations for development and productio
 
 ```typescript
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'prod' 
     ? [process.env.FRONTEND_DOMAIN || 'https://your-domain.com'] 
     : ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true,
@@ -430,7 +430,7 @@ npm run build
 npm start
 
 # Production mode with environment variables
-NODE_ENV=production npm start
+NODE_ENV=prod npm start
 ```
 
 ### Testing
@@ -470,7 +470,7 @@ WorkingDirectory=/var/www/colleagues/backend
 ExecStart=/usr/bin/node dist/server.js
 Restart=always
 RestartSec=10
-Environment=NODE_ENV=production
+Environment=NODE_ENV=prod
 Environment=PORT=3001
 Environment=FRONTEND_DOMAIN=https://your-domain.com
 Environment=DB_PATH=./database/colleagues.db
@@ -484,7 +484,7 @@ WantedBy=multi-user.target
 ### Environment Variables for Production
 
 ```bash
-NODE_ENV=production
+NODE_ENV=prod
 PORT=3001
 FRONTEND_DOMAIN=https://your-domain.com
 DB_PATH=./database/colleagues.db
@@ -616,7 +616,7 @@ The API supports versioning through URL prefixes:
 This is configured in the Express app setup:
 
 ```typescript
-const apiPrefix = process.env.NODE_ENV === 'production' ? '/colleagues/api' : '/api';
+const apiPrefix = process.env.NODE_ENV === 'prod' ? '/colleagues/api' : '/api';
 app.use(`${apiPrefix}/colleagues`, colleaguesRoutes);
 app.use(`${apiPrefix}/auth`, authRoutes);
 ```
