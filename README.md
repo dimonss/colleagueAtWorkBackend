@@ -71,7 +71,7 @@ FRONTEND_DOMAIN=https://your-domain.com
 DB_PATH=./database/colleagues.db
 
 # Upload settings
-UPLOAD_DIR=./uploads
+UPLOAD_DIR=./static
 MAX_FILE_SIZE=5242880
 ```
 
@@ -91,7 +91,7 @@ test/
 ├── setup.js        # Test database setup
 └── colleagues.test.ts # API integration tests
 
-uploads/            # Uploaded photos (UUID names)
+static/            # Uploaded photos (UUID names)
 database/           # SQLite database files
 dist/               # Compiled JavaScript (after build)
 ```
@@ -367,7 +367,7 @@ EventEmitter.getInstance().emit('statusChange', {
 - **Supported formats**: All image types (JPEG, PNG, GIF, etc.)
 - **Maximum file size**: 5MB
 - **File naming**: UUID-based names for security
-- **Storage location**: `uploads/` directory
+- **Storage location**: `static/` directory
 - **URL generation**: Automatic photo URL generation
 - **Cleanup**: Old photos automatically deleted when updating
 
@@ -474,7 +474,7 @@ Environment=NODE_ENV=production
 Environment=PORT=3001
 Environment=FRONTEND_DOMAIN=https://your-domain.com
 Environment=DB_PATH=./database/colleagues.db
-Environment=UPLOAD_DIR=./uploads
+Environment=UPLOAD_DIR=./static
 Environment=MAX_FILE_SIZE=5242880
 
 [Install]
@@ -488,7 +488,7 @@ NODE_ENV=production
 PORT=3001
 FRONTEND_DOMAIN=https://your-domain.com
 DB_PATH=./database/colleagues.db
-UPLOAD_DIR=./uploads
+UPLOAD_DIR=./static
 MAX_FILE_SIZE=5242880
 ```
 
@@ -498,7 +498,7 @@ MAX_FILE_SIZE=5242880
 # Set proper permissions
 sudo chown -R www-data:www-data /var/www/colleagues
 sudo chmod -R 755 /var/www/colleagues
-sudo chmod -R 777 /var/www/colleagues/backend/uploads
+sudo chmod -R 777 /var/www/colleagues/backend/static
 ```
 
 ## Error Handling
@@ -531,7 +531,7 @@ Error responses include a message:
 ## Performance Optimizations
 
 - **Efficient Database Queries**: Optimized SQL queries
-- **File Upload Streaming**: Memory-efficient uploads
+- **File Upload Streaming**: Memory-efficient static
 - **SSE Connection Management**: Proper connection handling
 - **Error Handling**: Comprehensive error management
 - **TypeScript**: Compile-time error checking
@@ -584,9 +584,9 @@ sudo journalctl -u colleagues-backend -f
 3. **Upload directory issues**
    ```bash
    # Create uploads directory
-   mkdir -p uploads
+   mkdir -p static
    # Set permissions
-   chmod 777 uploads
+   chmod 777 static
    ```
 
 4. **CORS errors**
