@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start:dev": "NODE_ENV=dev node dist/server.js",
-    "start:prod": "pm2 start node dist/server.js --name colleagues --interpreter $(nvm which 22)",
+    "start:prod": "pm2 start dist/server.js --name colleagues --interpreter /root/.nvm/versions/node/v22.17.1/bin/node",
     "dev": "ts-node src/server.ts",
     "dev:watch": "nodemon --exec ts-node src/server.ts",
     "test": "jest",
