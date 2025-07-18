@@ -3,6 +3,7 @@ import { DatabaseConfig } from '../config/database';
 import { Colleague } from '../types';
 import { staticDir } from '../config/upload';
 import StatusEventEmitter from '../utils/eventEmitter';
+import { generatePhotoUrl } from '../utils/urlHelper';
 import fs from 'fs';
 import path from 'path';
 
@@ -28,7 +29,7 @@ export class ColleaguesController {
       // Add full URL to photo filenames
       const colleagues = rows.map(colleague => ({
         ...colleague,
-        photo_url: colleague.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${colleague.photo_filename}` : `http://localhost:${PORT}/static/${colleague.photo_filename}`) : null
+        photo_url: colleague.photo_filename ? generatePhotoUrl(colleague.photo_filename) : null
       }));
       
       res.json(colleagues);
@@ -54,7 +55,7 @@ export class ColleaguesController {
       // Add full URL to photo filename
       const colleague = {
         ...row,
-        photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+        photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
       };
       
       res.json(colleague);
@@ -96,7 +97,7 @@ export class ColleaguesController {
         
         const colleague = {
           ...row,
-          photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+          photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
         };
         
         res.status(201).json(colleague);
@@ -157,7 +158,7 @@ export class ColleaguesController {
           
           const colleague = {
             ...row,
-            photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+            photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
           };
           
           res.json(colleague);
@@ -253,7 +254,7 @@ export class ColleaguesController {
           
           const colleague = {
             ...row,
-            photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+            photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
           };
           
           res.json(colleague);
@@ -264,12 +265,17 @@ export class ColleaguesController {
 
   // SSE stream for real-time status updates
   public static async getStatusStream(req: Request, res: Response): Promise<void> {
+    const origin = process.env.NODE_ENV === 'prod' 
+      ? (process.env.FRONTEND_DOMAIN)
+      : '*';
+    
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Cache-Control'
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Headers': 'Cache-Control',
+      'Access-Control-Allow-Credentials': 'true'
     });
 
     const eventEmitter = StatusEventEmitter.getInstance();

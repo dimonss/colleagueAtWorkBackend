@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { initDatabase } = require('./src/config/databaseInit');
+const { generatePhotoUrl } = require('./src/utils/urlHelper');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -101,7 +102,7 @@ app.get('/api/colleagues', (req, res) => {
     // Add full URL to photo filenames
     const colleagues = rows.map(colleague => ({
       ...colleague,
-      photo_url: colleague.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${colleague.photo_filename}` : `http://localhost:${PORT}/static/${colleague.photo_filename}`) : null
+      photo_url: colleague.photo_filename ? generatePhotoUrl(colleague.photo_filename) : null
     }));
     
     res.json(colleagues);
@@ -124,7 +125,7 @@ app.get('/api/colleagues/:id', (req, res) => {
     // Add full URL to photo filename
     const colleague = {
       ...row,
-      photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+      photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
     };
     
     res.json(colleague);
@@ -157,7 +158,7 @@ app.post('/api/colleagues', basicAuth, upload.single('photo'), (req, res) => {
       
       const colleague = {
         ...row,
-        photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+        photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
       };
       
       res.status(201).json(colleague);
@@ -208,7 +209,7 @@ app.put('/api/colleagues/:id', basicAuth, upload.single('photo'), (req, res) => 
         
         const colleague = {
           ...row,
-          photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
+          photo_url: row.photo_filename ? generatePhotoUrl(row.photo_filename) : null
         };
         
         res.json(colleague);

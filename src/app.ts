@@ -9,7 +9,7 @@ const app: Application = express();
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'prod'
-    ? []
+    ? [process.env.FRONTEND_DOMAIN || '']
     : ["*"],
   credentials: true,
   optionsSuccessStatus: 200
