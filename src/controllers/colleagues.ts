@@ -4,6 +4,7 @@ import { Colleague } from '../types';
 import { staticDir } from '../config/upload';
 import StatusEventEmitter from '../utils/eventEmitter';
 import { generatePhotoUrl } from '../utils/urlHelper';
+import { getCurrentSQLiteTimestamp, getCurrentTimestamp, getTimezoneInfo } from '../utils/dateHelper';
 import fs from 'fs';
 import path from 'path';
 
@@ -136,9 +137,9 @@ export class ColleaguesController {
       db.run(`
         UPDATE colleagues 
         SET name = ?, position = ?, department = ?, email = ?, phone = ?, 
-            photo_filename = ?, hire_date = ?, salary = ?, notes = ?, updated_at = CURRENT_TIMESTAMP
+            photo_filename = ?, hire_date = ?, salary = ?, notes = ?, updated_at = ?
         WHERE id = ?
-      `, [name, position, department, email, phone, photo_filename, hire_date, salary, notes, id], function(err) {
+      `, [name, position, department, email, phone, photo_filename, hire_date, salary, notes, getCurrentSQLiteTimestamp(), id], function(err) {
         if (err) {
           res.status(500).json({ error: err.message });
           return;
@@ -229,9 +230,9 @@ export class ColleaguesController {
       
       db.run(`
         UPDATE colleagues 
-        SET is_at_work = ?, updated_at = CURRENT_TIMESTAMP
+        SET is_at_work = ?, updated_at = ?
         WHERE id = ?
-      `, [is_at_work, id], function(err) {
+      `, [is_at_work, getCurrentSQLiteTimestamp(), id], function(err) {
         if (err) {
           res.status(500).json({ error: err.message });
           return;
@@ -309,6 +310,21 @@ export class ColleaguesController {
     req.on('close', () => {
       eventEmitter.off('statusChange', statusChangeHandler);
       clearInterval(heartbeat);
+    });
+  }
+
+  // Get server timezone information
+  public static async getTimezoneInfo(req: Request, res: Response): Promise<void> {
+    const timezoneInfo = getTimezoneInfo();
+    const currentTime = getCurrentTimestamp();
+    const sqliteTime = getCurrentSQLiteTimestamp();
+    
+    res.json({
+      timezone: timezoneInfo,
+      currentTime: currentTime,
+      sqliteTime: sqliteTime,
+      systemTime: new Date().toISOString(),
+      message: 'Server timezone information'
     });
   }
 } 

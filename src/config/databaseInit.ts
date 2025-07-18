@@ -1,5 +1,6 @@
 import { Database } from 'sqlite3';
 import bcrypt from 'bcryptjs';
+import { getCurrentSQLiteTimestamp } from '../utils/dateHelper';
 
 export function initDatabase(db: Database): void {
   db.serialize(() => {
@@ -16,8 +17,8 @@ export function initDatabase(db: Database): void {
       salary REAL,
       notes TEXT,
       is_at_work BOOLEAN DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT '${getCurrentSQLiteTimestamp()}',
+      updated_at DATETIME DEFAULT '${getCurrentSQLiteTimestamp()}'
     )`);
 
     // Create users table for basic auth
@@ -25,7 +26,7 @@ export function initDatabase(db: Database): void {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT '${getCurrentSQLiteTimestamp()}'
     )`, (err) => {
       if (err) {
         console.error('Error creating users table:', err.message);

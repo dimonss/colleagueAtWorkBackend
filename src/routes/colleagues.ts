@@ -26,4 +26,7 @@ router.patch('/:id/status', ColleaguesController.updateColleagueStatus);
 // SSE endpoint for real-time status updates
 router.get('/status/stream', ColleaguesController.getStatusStream);
 
+// Get server timezone information
+router.get('/timezone', ColleaguesController.getTimezoneInfo);
+
 export default router; 
