@@ -616,7 +616,7 @@ The API supports versioning through URL prefixes:
 This is configured in the Express app setup:
 
 ```typescript
-const apiPrefix = process.env.NODE_ENV === 'prod' ? '/colleagues/api' : '/api';
+const apiPrefix = process.env.NODE_ENV === 'prod' ? '' : '/api';
 app.use(`${apiPrefix}/colleagues`, colleaguesRoutes);
 app.use(`${apiPrefix}/auth`, authRoutes);
 ```

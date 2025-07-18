@@ -28,7 +28,7 @@ export class ColleaguesController {
       // Add full URL to photo filenames
       const colleagues = rows.map(colleague => ({
         ...colleague,
-        photo_url: colleague.photo_filename ? `http://localhost:${PORT}/static/${colleague.photo_filename}` : null
+        photo_url: colleague.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${colleague.photo_filename}` : `http://localhost:${PORT}/static/${colleague.photo_filename}`) : null
       }));
       
       res.json(colleagues);
