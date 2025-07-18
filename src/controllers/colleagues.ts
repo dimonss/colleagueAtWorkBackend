@@ -54,7 +54,7 @@ export class ColleaguesController {
       // Add full URL to photo filename
       const colleague = {
         ...row,
-        photo_url: row.photo_filename ? `http://localhost:${PORT}/static/${row.photo_filename}` : null
+        photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
       };
       
       res.json(colleague);
@@ -96,7 +96,7 @@ export class ColleaguesController {
         
         const colleague = {
           ...row,
-          photo_url: row.photo_filename ? `http://localhost:${PORT}/static/${row.photo_filename}` : null
+          photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
         };
         
         res.status(201).json(colleague);
@@ -157,7 +157,7 @@ export class ColleaguesController {
           
           const colleague = {
             ...row,
-            photo_url: row.photo_filename ? `http://localhost:${PORT}/static/${row.photo_filename}` : null
+            photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
           };
           
           res.json(colleague);
@@ -253,7 +253,7 @@ export class ColleaguesController {
           
           const colleague = {
             ...row,
-            photo_url: row.photo_filename ? `http://localhost:${PORT}/static/${row.photo_filename}` : null
+            photo_url: row.photo_filename ? (process.env.NODE_ENV === 'prod' ? `https://chalysh.tech/colleagues/static/${row.photo_filename}` : `http://localhost:${PORT}/static/${row.photo_filename}`) : null
           };
           
           res.json(colleague);
