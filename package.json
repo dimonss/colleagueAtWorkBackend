@@ -10,6 +10,7 @@
     "dev": "ts-node src/server.ts",
     "dev:watch": "nodemon --exec ts-node src/server.ts",
     "test": "jest",
+    "test:timezone": "node test-timezone.js",
     "addMockDataIntoDB": "ts-node scripts/addMockDataIntoDB.ts",
     "clearDB": "ts-node scripts/clearDB.ts --force"
   },
