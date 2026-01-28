@@ -1,5 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { staticDir } from './config/upload';
 import colleaguesRoutes from './routes/colleagues';
 import authRoutes from './routes/auth';
@@ -17,6 +18,7 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,17 +38,17 @@ app.get('/health', (req: Request, res: Response) => {
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   console.error(err.stack);
-  
+
   if (err.message === 'Only image files are allowed!') {
     res.status(400).json({ error: 'Only image files are allowed!' });
     return;
   }
-  
+
   if (err.message.includes('File too large')) {
     res.status(400).json({ error: 'File too large. Maximum size is 5MB.' });
     return;
   }
-  
+
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
